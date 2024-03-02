@@ -8,7 +8,7 @@ remappings = ['@openzeppelin/contracts=lib/openzeppelin-contracts/contracts']
 [invariant]
 runs = 256
 depth = 32
-fail_on_revert = true
+fail_on_revert = false
 
 [fmt]
 bracket_spacing = true

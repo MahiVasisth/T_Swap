@@ -98,7 +98,8 @@ contract TSwapPool is ERC20 {
     }
 
     /*//////////////////////////////////////////////////////////////
-                        ADD AND REMOVE LIQUIDITY
+
+    ADD AND REMOVE LIQUIDITY
     //////////////////////////////////////////////////////////////*/
 
     /// @notice Adds liquidity to the pool
@@ -247,9 +248,9 @@ contract TSwapPool is ERC20 {
     //////////////////////////////////////////////////////////////*/
 
     function getOutputAmountBasedOnInput(
-        uint256 inputAmount,
-        uint256 inputReserves,
-        uint256 outputReserves
+        uint256 inputAmount, // @qaudit 1e18
+        uint256 inputReserves, // @qaudit 10e18
+        uint256 outputReserves // @qaudit 5e18
     )
         public
         pure
@@ -271,9 +272,13 @@ contract TSwapPool is ERC20 {
         // totalPoolTokensOfPool) + (wethToDeposit * poolTokensToDeposit) = k
         // (totalWethOfPool * totalPoolTokensOfPool) + (wethToDeposit * totalPoolTokensOfPool) = k - (totalWethOfPool *
         // poolTokensToDeposit) - (wethToDeposit * poolTokensToDeposit)
+          // @qaudit = 1e18 * 997 =  997000000000000000000
         uint256 inputAmountMinusFee = inputAmount * 997;
+        // @qaudit =  997000000000000000000 * 5e18 =  4985000000000000000000000000000000000000
         uint256 numerator = inputAmountMinusFee * outputReserves;
+    // @qaudit = (10e18 * 1000) +  997000000000000000000 =  10997000000000000000000
         uint256 denominator = (inputReserves * 1000) + inputAmountMinusFee;
+        // @qaudit =   4985000000000000000000000000000000000000 / 10997000000000000000000 = 4.535e14
         return numerator / denominator;
     }
 
